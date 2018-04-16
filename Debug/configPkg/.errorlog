@@ -1,0 +1,4 @@
+"ti/dsplib/Version.xdc", line 9:  can't resolve name (ti.mas.swtools.IVersion2)
+js: "/home/greg/workspace_v7/ti-rtos-uart-test/app.cfg", line 127: xdc.services.global.XDCException: xdc.PACKAGE_REPARSE_FAILED: /home/greg/ti/dsplib_c66x_3_4_0_0/packages/ti/dsplib/package.xdc found along the package path, but its package files are incompatible with the current tools and could not be regenerated (InternalError: parser failed).  The package 'ti.dsplib' must be rebuilt with the current tools.
+    "./package/cfg/app_pe66.cfg", line 191
+gmake: *** [package/cfg/app_pe66.xdl] Error 1
