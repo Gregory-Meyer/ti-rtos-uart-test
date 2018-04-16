@@ -20,14 +20,6 @@
 #include <ti/mathlib/mathlib.h>
 #include <ti/dsplib/dsplib.h>
 
-#ifdef TRUE
-#undef TRUE
-#endif
-
-#ifdef FALSE
-#undef FALSE
-#endif
-
 static void generate_twiddle_factors(FloatBuffer *const self) {
     float *const w = (float*) self->twiddle_factors;
 

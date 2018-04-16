@@ -9,6 +9,7 @@
 #include <string.h>
 #include <stdbool.h>
 #include <inttypes.h>
+#include <math.h>
 
 #include <ti/sysbios/BIOS.h>
 #include <ti/sysbios/knl/Task.h>
@@ -19,6 +20,23 @@
 #include <xdc/runtime/Error.h>
 #include <xdc/runtime/System.h>
 #include <xdc/runtime/Memory.h>
+
+
+#ifdef TRUE
+#undef TRUE
+#endif
+
+#ifdef FALSE
+#undef FALSE
+#endif
+
+#include <ti/mathlib/mathlib.h>
+#include <ti/dsplib/dsplib.h>
+
+// Event IDs:
+// 0: write UART write buffer
+// 1: append UART read buffer onto FFT buffer
+// 2: write coefficients from FFT buffer onto UART write buffer
 
 static void uart_read(const Event_Handle event, UartSynchronizer *const sync,
                       Buffer *const buffer) {
@@ -96,8 +114,8 @@ Void uart_print_task(const UArg event_arg, const UArg buffer_arg) {
     Event_post(event, Event_Id_00);
 }
 
-void fft(const Event_Handle event, const Event_Handle fft_event,
-         Buffer *const input_buffer, FloatBuffer *const fft_buffer) {
+static void fft(const Event_Handle event, const Event_Handle fft_event,
+                Buffer *const input_buffer, FloatBuffer *const fft_buffer) {
     while (true) {
         Event_pend(event, Event_Id_NONE, Event_Id_01, BIOS_WAIT_FOREVER);
 
@@ -133,17 +151,81 @@ Void fft_task(const UArg events_arg, const UArg buffers_arg) {
 }
 
 typedef struct PrintFftEventPair {
-    Event_Handle fft_event;
     Event_Handle write_event;
+    Event_Handle fft_event;
 } PrintFftEventPair;
 
-typedef struct PrintFftBufferPair {
+typedef struct PrintFftBufferTuple {
     Buffer *const write_buffer;
     FloatBuffer *const fft_buffer;
-} PrintFftBufferPair;
+    float complex *const cmag_buffer;
+} PrintFftBufferTuple;
 
-Void print_fft_task(const UArg args_arg, const UArg fft_buffer) {
+static void
+print_fft(const Event_Handle write_event, const Event_Handle fft_event,
+          Buffer *const write_buffer, FloatBuffer *const fft_buffer,
+          float complex *const cmag_buffer) {
+    float *const mag_buffer = (float*) cmag_buffer;
 
+    // frequencies (Hz):
+    // 25, 50, 100, 200, 400, 800, 1600, 2400, 3200, 4800, 6400
+    // indices (40kHz, 1024 samples):
+    // [0, 2), [1, 3), [2, 4), [4, 7), [9, 13), [18, 24),
+    // [36, 47), [55, 69), [73, 92), [110, 137), [147, 182)
+    uint8_t magnitudes[11];
+
+    // these are offset to be double word aligned
+    static const size_t INDEX[11][2] =
+        { { 0, 2 }, { 0, 3 }, { 2, 2 }, { 4, 3 }, { 8, 5 },
+          { 18, 6 }, { 36, 11 }, { 54, 15 }, { 72, 20 }, { 110, 27 },
+          { 146, 36 } };
+
+    while (true) {
+        Event_pend(fft_event, Event_Id_NONE, Event_Id_02, BIOS_WAIT_FOREVER);
+
+        fb_fft_drain(fft_buffer, cmag_buffer);
+
+        for (size_t i = 0; i < FLOAT_BUFFER_SIZE; ++i) {
+            const float re = mag_buffer[2 * i];
+            const float im = mag_buffer[2 * i + 1];
+
+            mag_buffer[i] = sqrtsp(sqrtsp(re * re + im * im)
+                                   * 2.0f / FLOAT_BUFFER_SIZE);
+        }
+
+        for (size_t i = 0; i < 11; ++i) {
+            float mag = DSPF_sp_vecsum_sq(mag_buffer + INDEX[i][0],
+                                          (int) INDEX[i][1]);
+
+            mag /= (float) FLOAT_BUFFER_SIZE;
+
+            if (mag > 1.0f) {
+                mag = 1.0f;
+            }
+
+            mag = round(mag * 10.0f);
+
+            magnitudes[i] = (uint8_t) mag;
+        }
+
+        bf_append(write_buffer, magnitudes, 11);
+
+        Event_post(write_event, Event_Id_00);
+    }
+}
+
+Void print_fft_task(const UArg events_arg, const UArg buffers_arg) {
+    PrintFftEventPair *const events = (PrintFftEventPair*) events_arg;
+    PrintFftBufferTuple *const buffers = (PrintFftBufferTuple*) buffers_arg;
+
+    const Event_Handle write_event = events->write_event;
+    const Event_Handle fft_event = events->fft_event;
+
+    Buffer *const write_buffer = buffers->write_buffer;
+    FloatBuffer *const fft_buffer = buffers->fft_buffer;
+    float complex *const cmag_buffer = buffers->cmag_buffer;
+
+    print_fft(write_event, fft_event, write_buffer, fft_buffer, cmag_buffer);
 }
 
 static void initialize(void) {
@@ -152,6 +234,12 @@ static void initialize(void) {
     Buffer *const read_buffer = bf_new(&error);
     Buffer *const write_buffer = bf_new(&error);
     FloatBuffer *const fft_buffer = fb_new(&error);
+    float complex *const cmag_buffer =
+        Memory_alloc(NULL, 1024 * sizeof(float complex), 8, &error);
+
+    if (!cmag_buffer) {
+        System_abort("initialize: unable to allocate float complex buffer\n");
+    }
 
     Event_Handle read_event = event_new(&error);
     Event_Handle write_event = event_new(&error);
@@ -167,8 +255,11 @@ static void initialize(void) {
     Task_Handle write_task = task_new(&uart_write_task, &write_args,
                                       write_buffer, &error);
 
-    Task_Handle print_task = task_new(&print_fft_task, write_event,
-                                      write_buffer, &error);
+    PrintFftEventPair print_event_pair = { write_event, fft_event };
+    PrintFftBufferTuple print_buffer_tuple = { write_buffer, fft_buffer,
+                                               cmag_buffer };
+    Task_Handle print_task = task_new(&print_fft_task, &print_event_pair,
+                                      &print_buffer_tuple, &error);
 
     BIOS_start();
 
@@ -180,6 +271,8 @@ static void initialize(void) {
     Event_delete(&write_event);
     Event_delete(&read_event);
 
+    Memory_free(NULL, cmag_buffer, 1024 * sizeof(float complex));
+    fb_delete(fft_buffer);
     bf_delete(write_buffer);
     bf_delete(read_buffer);
 }
