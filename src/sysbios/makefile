@@ -14,7 +14,7 @@ BIOS_DEFS =  -Dti_sysbios_BIOS_swiEnabled__D=TRUE -Dti_sysbios_BIOS_taskEnabled_
 
 BIOS_INC  = -I"/home/greg/ti/bios_6_52_00_12/packages/"
 
-INCS =  $(BIOS_INC) -I"/home/greg/ti/bios_6_52_00_12/packages/" -I"/home/greg/ti/pdk_k2l_4_0_9/packages/" -I"/home/greg/ti/ccsv7/ccs_base/" -I"/home/greg/ti/xdctools_3_50_04_43_core/packages/" -I"../" -I"/packages//" 
+INCS =  $(BIOS_INC) -I"/home/greg/ti/bios_6_52_00_12/packages/" -I"/home/greg/ti/pdk_k2l_4_0_9/packages/" -I"/home/greg/ti/dsplib_c66x_3_4_0_0/packages/" -I"/home/greg/ti/mathlib_rts_c66x_3_1_2_1/packages/" -I"/home/greg/ti/ccsv7/ccs_base/" -I"/home/greg/ti/xdctools_3_50_04_43_core/packages/" -I"../" -I"/packages//" 
 
 CC = /home/greg/ti/ti-cgt-c6000_8.2.2/bin/cl6x -c $(CCOPTS) -I /home/greg/ti/ti-cgt-c6000_8.2.2/include
 ASM = /home/greg/ti/ti-cgt-c6000_8.2.2/bin/cl6x -c $(CCOPTS) -I /home/greg/ti/ti-cgt-c6000_8.2.2/include

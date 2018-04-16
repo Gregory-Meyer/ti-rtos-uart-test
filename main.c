@@ -1,6 +1,7 @@
 #include "buffer.h"
 #include "uart_synchronizer.h"
 #include "utils.h"
+#include "float_buffer.h"
 
 #include <assert.h>
 #include <complex.h>
@@ -95,44 +96,54 @@ Void uart_print_task(const UArg event_arg, const UArg buffer_arg) {
     Event_post(event, Event_Id_00);
 }
 
-static float fi8_as_fl32(const uint8_t fixed) {
-    return (float) fixed / (float) (1 << 8);
-}
-
-void fft(const Event_Handle event, Buffer *const buffer) {
-    Error_Block error = make_error_block();
-    float complex *const input_buf =
-        Memory_alloc(NULL, sizeof(float complex) * 4096,
-                     __alignof__(float complex), &error);
-    size_t input_size = 0;
-
-    if (!input_buf) {
-        System_abort("fft: unable to allocate float complex buffer\n");
-    }
-
+void fft(const Event_Handle event, const Event_Handle fft_event,
+         Buffer *const input_buffer, FloatBuffer *const fft_buffer) {
     while (true) {
         Event_pend(event, Event_Id_NONE, Event_Id_01, BIOS_WAIT_FOREVER);
 
-        uint8_t local_buffer[512];
+        fb_append(fft_buffer, input_buffer);
 
-        while (bf_size(buffer) > 0) {
-            const size_t moved = bf_move(buffer, local_buffer, 512);
-
-            while (input_size < moved) {
-                const float input = fi8_as_fl32(local_buffer[input_size]);
-                input_buf[input_size] = input + 0.0 * I;
-
-                ++input_size;
-            }
+        if (fb_size(fft_buffer) == 1024) {
+            Event_post(fft_event, Event_Id_02);
         }
     }
 }
 
-Void fft_task(const UArg event_arg, const UArg buffer_arg) {
-    const Event_Handle event = (Event_Handle) event_arg;
-    Buffer *const buffer = (Buffer*) buffer_arg;
+typedef struct FftEventPair {
+    Event_Handle event;
+    Event_Handle fft_event;
+} FftEventPair;
 
-    fft(event, buffer);
+typedef struct FftBufferPair {
+    Buffer *buffer;
+    FloatBuffer *fft_buffer;
+} FftBufferPair;
+
+Void fft_task(const UArg events_arg, const UArg buffers_arg) {
+    FftEventPair *const events = (FftEventPair*) events_arg;
+    FftBufferPair *const buffers = (FftBufferPair*) buffers_arg;
+
+    const Event_Handle event = events->event;
+    const Event_Handle fft_event = events->fft_event;
+
+    Buffer *const buffer = buffers->buffer;
+    FloatBuffer *const fft_buffer = buffers->fft_buffer;
+
+    fft(event, fft_event, buffer, fft_buffer);
+}
+
+typedef struct PrintFftEventPair {
+    Event_Handle fft_event;
+    Event_Handle write_event;
+} PrintFftEventPair;
+
+typedef struct PrintFftBufferPair {
+    Buffer *const write_buffer;
+    FloatBuffer *const fft_buffer;
+} PrintFftBufferPair;
+
+Void print_fft_task(const UArg args_arg, const UArg fft_buffer) {
+
 }
 
 static void initialize(void) {
@@ -140,9 +151,11 @@ static void initialize(void) {
 
     Buffer *const read_buffer = bf_new(&error);
     Buffer *const write_buffer = bf_new(&error);
+    FloatBuffer *const fft_buffer = fb_new(&error);
 
     Event_Handle read_event = event_new(&error);
     Event_Handle write_event = event_new(&error);
+    Event_Handle fft_event = event_new(&error);
 
     UartSynchronizer *const sync = us_new(&error);
 
@@ -154,7 +167,7 @@ static void initialize(void) {
     Task_Handle write_task = task_new(&uart_write_task, &write_args,
                                       write_buffer, &error);
 
-    Task_Handle print_task = task_new(&uart_print_task, write_event,
+    Task_Handle print_task = task_new(&print_fft_task, write_event,
                                       write_buffer, &error);
 
     BIOS_start();

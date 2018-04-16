@@ -1,6 +1,8 @@
 #ifndef EECS373_GREGJM_SARUF_VPARASHA_FLOAT_BUFFER_H
 #define EECS373_GREGJM_SARUF_VPARASHA_FLOAT_BUFFER_H
 
+#include "buffer.h"
+
 #include <stddef.h>
 #include <complex.h>
 
@@ -11,6 +13,8 @@
 
 typedef struct FloatBuffer {
     float complex data[FLOAT_BUFFER_SIZE];
+    float complex twiddle_factors[FLOAT_BUFFER_SIZE];
+    unsigned char bit_reversal_table[64];
     size_t size;
     Semaphore_Handle semaphore;
 } FloatBuffer;
@@ -19,11 +23,11 @@ FloatBuffer* fb_new(Error_Block *error);
 
 void fb_delete(FloatBuffer *self);
 
-size_t fb_append(FloatBuffer *self, const float complex *buffer,
-                 size_t length);
+size_t fb_append(FloatBuffer *self, Buffer *buffer);
 
 size_t fb_size(const FloatBuffer *self);
 
-size_t fb_fft_drain(FloatBuffer *self, float complex *output, size_t length);
+// output must have space for 1024 float complex values
+void fb_fft_drain(FloatBuffer *self, float complex *output);
 
 #endif
