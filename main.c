@@ -30,6 +30,16 @@
 // 1: append UART read buffer onto FFT buffer
 // 2: write coefficients from FFT buffer onto UART write buffer
 
+Void test_print_task(const UArg sync_arg,
+                     const UArg __attribute__((unused)) unused) {
+    UartSynchronizer *const sync = (UartSynchronizer*) sync_arg;
+
+    static const char *const string = "Hello, world!\n";
+    const size_t length = strlen(string);
+
+    us_write(sync, string, length);
+}
+
 static void initialize(void) {
     Error_Block error = make_error_block();
 
@@ -67,6 +77,8 @@ static void initialize(void) {
                                                cmag_buffer };
     Task_Handle print_task = task_new(&print_fft_task, &print_event_pair,
                                       &print_buffer_tuple, 3, &error);
+
+//    Task_Handle test_task = task_new(&test_print_task, sync, NULL, 1, &error);
 
     BIOS_start();
 

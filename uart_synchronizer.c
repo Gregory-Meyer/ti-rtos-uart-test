@@ -26,7 +26,7 @@ static UART_Params make_params(void) {
 
     params.readEcho = UART_ECHO_OFF;
 
-    params.baudRate = 921600;
+    params.baudRate = 115200;
 
     params.dataLength = UART_LEN_8;
     params.stopBits = UART_STOP_ONE;
