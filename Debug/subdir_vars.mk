@@ -8,9 +8,11 @@ CFG_SRCS += \
 
 C_SRCS += \
 ../buffer.c \
+../fft_task.c \
 ../float_buffer.c \
 ../main.c \
 ../uart_synchronizer.c \
+../uart_task.c \
 ../utils.c 
 
 GEN_CMDS += \
@@ -25,9 +27,11 @@ GEN_MISC_DIRS += \
 
 C_DEPS += \
 ./buffer.d \
+./fft_task.d \
 ./float_buffer.d \
 ./main.d \
 ./uart_synchronizer.d \
+./uart_task.d \
 ./utils.d 
 
 GEN_OPTS += \
@@ -35,9 +39,11 @@ GEN_OPTS += \
 
 OBJS += \
 ./buffer.obj \
+./fft_task.obj \
 ./float_buffer.obj \
 ./main.obj \
 ./uart_synchronizer.obj \
+./uart_task.obj \
 ./utils.obj 
 
 GEN_MISC_DIRS__QUOTED += \
@@ -45,16 +51,20 @@ GEN_MISC_DIRS__QUOTED += \
 
 OBJS__QUOTED += \
 "buffer.obj" \
+"fft_task.obj" \
 "float_buffer.obj" \
 "main.obj" \
 "uart_synchronizer.obj" \
+"uart_task.obj" \
 "utils.obj" 
 
 C_DEPS__QUOTED += \
 "buffer.d" \
+"fft_task.d" \
 "float_buffer.d" \
 "main.d" \
 "uart_synchronizer.d" \
+"uart_task.d" \
 "utils.d" 
 
 GEN_FILES__QUOTED += \
@@ -63,9 +73,11 @@ GEN_FILES__QUOTED += \
 
 C_SRCS__QUOTED += \
 "../buffer.c" \
+"../fft_task.c" \
 "../float_buffer.c" \
 "../main.c" \
 "../uart_synchronizer.c" \
+"../uart_task.c" \
 "../utils.c" 
 
 

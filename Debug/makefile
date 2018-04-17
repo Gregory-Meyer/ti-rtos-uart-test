@@ -9,9 +9,11 @@ GEN_CMDS__FLAG := -l"configPkg/linker.cmd"
 
 ORDERED_OBJS += \
 "./buffer.obj" \
+"./fft_task.obj" \
 "./float_buffer.obj" \
 "./main.obj" \
 "./uart_synchronizer.obj" \
+"./uart_task.obj" \
 "./utils.obj" \
 $(GEN_CMDS__FLAG) \
 -llibc.a \
@@ -158,8 +160,8 @@ ti-rtos-uart-test.hex: $(EXE_OUTPUTS)
 clean:
 	-$(RM) $(GEN_CMDS__QUOTED)$(GEN_MISC_FILES__QUOTED)$(BIN_OUTPUTS__QUOTED)$(GEN_FILES__QUOTED)$(EXE_OUTPUTS__QUOTED)$(GEN_OPTS__QUOTED)
 	-$(RMDIR) $(GEN_MISC_DIRS__QUOTED)
-	-$(RM) "buffer.obj" "float_buffer.obj" "main.obj" "uart_synchronizer.obj" "utils.obj" 
-	-$(RM) "buffer.d" "float_buffer.d" "main.d" "uart_synchronizer.d" "utils.d" 
+	-$(RM) "buffer.obj" "fft_task.obj" "float_buffer.obj" "main.obj" "uart_synchronizer.obj" "uart_task.obj" "utils.obj" 
+	-$(RM) "buffer.d" "fft_task.d" "float_buffer.d" "main.d" "uart_synchronizer.d" "uart_task.d" "utils.d" 
 	-@echo 'Finished clean'
 	-@echo ' '
 
