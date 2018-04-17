@@ -40,14 +40,16 @@
 
 static void uart_read(const Event_Handle event, UartSynchronizer *const sync,
                       Buffer *const buffer) {
-    while (true) {
-        uint8_t local_buffer[1];
+    uint8_t local_buffer[512];
 
-        const size_t read = us_read(sync, local_buffer, 1);
+    while (true) {
+        const size_t read = us_read(sync, local_buffer, 512);
 
         if (read > 0) {
-            bf_append(buffer, local_buffer, 1);
+            bf_append(buffer, local_buffer, read);
+        }
 
+        if (bf_size(buffer) >= 256) {
             Event_post(event, Event_Id_01);
         }
     }
@@ -114,7 +116,7 @@ Void uart_print_task(const UArg event_arg, const UArg buffer_arg) {
     Event_post(event, Event_Id_00);
 }
 
-static void fft(const Event_Handle event, const Event_Handle fft_event,
+static void calc_fft(const Event_Handle event, const Event_Handle fft_event,
                 Buffer *const input_buffer, FloatBuffer *const fft_buffer) {
     while (true) {
         Event_pend(event, Event_Id_NONE, Event_Id_01, BIOS_WAIT_FOREVER);
@@ -137,7 +139,7 @@ typedef struct FftBufferPair {
     FloatBuffer *fft_buffer;
 } FftBufferPair;
 
-Void fft_task(const UArg events_arg, const UArg buffers_arg) {
+Void calc_fft_task(const UArg events_arg, const UArg buffers_arg) {
     FftEventPair *const events = (FftEventPair*) events_arg;
     FftBufferPair *const buffers = (FftBufferPair*) buffers_arg;
 
@@ -147,7 +149,7 @@ Void fft_task(const UArg events_arg, const UArg buffers_arg) {
     Buffer *const buffer = buffers->buffer;
     FloatBuffer *const fft_buffer = buffers->fft_buffer;
 
-    fft(event, fft_event, buffer, fft_buffer);
+    calc_fft(event, fft_event, buffer, fft_buffer);
 }
 
 typedef struct PrintFftEventPair {
@@ -249,17 +251,22 @@ static void initialize(void) {
 
     UartReadArgs read_args = { read_event, sync };
     Task_Handle read_task = task_new(&uart_read_task, &read_args,
-                                     read_buffer, &error);
+                                     read_buffer, 1, &error);
 
     UartWriteArgs write_args = { write_event, sync };
     Task_Handle write_task = task_new(&uart_write_task, &write_args,
-                                      write_buffer, &error);
+                                      write_buffer, 4, &error);
+
+    FftEventPair fft_event_pair = { read_event, fft_event };
+    FftBufferPair fft_buffer_pair = { read_buffer, fft_buffer };
+    Task_Handle fft_task = task_new(&calc_fft_task, &fft_event_pair,
+                                    &fft_buffer_pair, 2, &error);
 
     PrintFftEventPair print_event_pair = { write_event, fft_event };
     PrintFftBufferTuple print_buffer_tuple = { write_buffer, fft_buffer,
                                                cmag_buffer };
     Task_Handle print_task = task_new(&print_fft_task, &print_event_pair,
-                                      &print_buffer_tuple, &error);
+                                      &print_buffer_tuple, 3, &error);
 
     BIOS_start();
 

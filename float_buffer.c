@@ -114,7 +114,7 @@ size_t fb_append(FloatBuffer *const self, Buffer *const buffer) {
 
     const size_t unappended = BUFFER_SIZE - num_to_append;
     memmove(buffer->data, buffer->data + num_to_append, unappended);
-    buffer->size -= unappended;
+    buffer->size -= num_to_append;
 
     Semaphore_post(buffer->semaphore);
     Semaphore_post(self->semaphore);

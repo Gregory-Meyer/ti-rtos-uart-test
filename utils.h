@@ -11,6 +11,6 @@ Error_Block make_error_block(void);
 Event_Handle event_new(Error_Block *error);
 
 Task_Handle task_new(const Task_FuncPtr function, void *const first_arg,
-                     void *const second_arg, Error_Block *error);
+                     void *const second_arg, Int priority, Error_Block *error);
 
 #endif

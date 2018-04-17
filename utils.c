@@ -24,12 +24,14 @@ Event_Handle event_new(Error_Block *const error) {
 }
 
 Task_Handle task_new(const Task_FuncPtr function, void *const first_arg,
-                      void *const second_arg, Error_Block *const error) {
+                      void *const second_arg, const Int priority,
+                      Error_Block *const error) {
     Task_Params params;
     Task_Params_init(&params);
 
     params.arg0 = (UArg) first_arg;
     params.arg1 = (UArg) second_arg;
+    params.priority = priority;
 
     Task_Handle task = Task_create(function, &params, error);
 

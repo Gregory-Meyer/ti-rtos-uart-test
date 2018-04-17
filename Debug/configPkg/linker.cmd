@@ -100,6 +100,12 @@ MEMORY
 
 /* Content from ti.sysbios.hal (null): */
 
+/* Content from ti.sysbios (null): */
+
+/* Content from ti.sysbios.rts (ti/sysbios/rts/linkcmd.xdt): */
+
+/* Content from ti.sysbios.rts.ti (ti/sysbios/rts/ti/linkcmd.xdt): */
+
 /* Content from ti.sysbios.knl (null): */
 
 /* Content from ti.sysbios.timers.timer64 (null): */
@@ -110,12 +116,6 @@ MEMORY
 ti_sysbios_family_c66_Cache_l1dSize = 32768;
 ti_sysbios_family_c66_Cache_l1pSize = 32768;
 ti_sysbios_family_c66_Cache_l2Size = 0;
-
-/* Content from ti.sysbios (null): */
-
-/* Content from ti.sysbios.rts (ti/sysbios/rts/linkcmd.xdt): */
-
-/* Content from ti.sysbios.rts.ti (ti/sysbios/rts/ti/linkcmd.xdt): */
 
 /* Content from ti.sysbios.family.c66.tci66xx (null): */
 

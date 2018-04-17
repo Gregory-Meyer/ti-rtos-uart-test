@@ -16543,14 +16543,14 @@ __o = __obj[873]  // ti.sysbios.BIOS
     __o['common$'] = __obj[875.0]
     __o['configNameMap$'] = __obj[876.0]
     __o['cpuFreq'] = __obj[889.0]
-    __o['customCCOpts'] = String(java.net.URLDecoder.decode('-mv6600+--abi%3Deabi+-q+-mi10+-mo+-pdr+-pden+-pds%3D238+-pds%3D880+-pds1110++--program_level_compile+-g', 'UTF-8'))
+    __o['customCCOpts'] = String(java.net.URLDecoder.decode('-mv6600+--abi%3Deabi+-q+-mi10+-mo+-pdr+-pden+-pds%3D238+-pds%3D880+-pds1110++--program_level_compile+-o3+-g+--optimize_with_debug', 'UTF-8'))
     __o['heapSection'] = String(java.net.URLDecoder.decode('.heap', 'UTF-8'))
     __o['heapSize'] = 65536
     __o['heapTrackEnabled'] = false
     __o['includeXdcRuntime'] = false
     __o['installedErrorHook'] = String(java.net.URLDecoder.decode('%26xdc_runtime_Error_print__E', 'UTF-8'))
     __o['libDir'] = null
-    __o['libType'] = String(java.net.URLDecoder.decode('ti.sysbios.BIOS.LibType_Debug', 'UTF-8'))
+    __o['libType'] = String(java.net.URLDecoder.decode('ti.sysbios.BIOS.LibType_Instrumented', 'UTF-8'))
     __o['logsEnabled'] = true
     __o['rovShowRawTab$'] = true
     __o['rovViewInfo'] = __obj[93.0]
@@ -16708,7 +16708,7 @@ __o = __obj[889]  // ti.sysbios.BIOS/cpuFreq
     __o['$category'] = String(java.net.URLDecoder.decode('Struct', 'UTF-8'))
     __o['$name'] = String(java.net.URLDecoder.decode('ti.sysbios.BIOS%2FcpuFreq', 'UTF-8'))
     __o['hi'] = 0
-    __o['lo'] = 1400000000
+    __o['lo'] = 1200000000
 
 __o = __obj[890]  // ti.sysbios.BIOS/startupFxns
     __o['$category'] = String(java.net.URLDecoder.decode('Vector', 'UTF-8'))
@@ -17313,97 +17313,97 @@ __o = __obj[948]  // ti.sysbios.timers.timer64.Timer/intFreqs/0
     __o['$category'] = String(java.net.URLDecoder.decode('Struct', 'UTF-8'))
     __o['$name'] = String(java.net.URLDecoder.decode('ti.sysbios.timers.timer64.Timer%2FintFreqs%2F0', 'UTF-8'))
     __o['hi'] = 0
-    __o['lo'] = 2.3333333333333334E8
+    __o['lo'] = 200000000
 
 __o = __obj[949]  // ti.sysbios.timers.timer64.Timer/intFreqs/1
     __o['$category'] = String(java.net.URLDecoder.decode('Struct', 'UTF-8'))
     __o['$name'] = String(java.net.URLDecoder.decode('ti.sysbios.timers.timer64.Timer%2FintFreqs%2F1', 'UTF-8'))
     __o['hi'] = 0
-    __o['lo'] = 2.3333333333333334E8
+    __o['lo'] = 200000000
 
 __o = __obj[950]  // ti.sysbios.timers.timer64.Timer/intFreqs/2
     __o['$category'] = String(java.net.URLDecoder.decode('Struct', 'UTF-8'))
     __o['$name'] = String(java.net.URLDecoder.decode('ti.sysbios.timers.timer64.Timer%2FintFreqs%2F2', 'UTF-8'))
     __o['hi'] = 0
-    __o['lo'] = 2.3333333333333334E8
+    __o['lo'] = 200000000
 
 __o = __obj[951]  // ti.sysbios.timers.timer64.Timer/intFreqs/3
     __o['$category'] = String(java.net.URLDecoder.decode('Struct', 'UTF-8'))
     __o['$name'] = String(java.net.URLDecoder.decode('ti.sysbios.timers.timer64.Timer%2FintFreqs%2F3', 'UTF-8'))
     __o['hi'] = 0
-    __o['lo'] = 2.3333333333333334E8
+    __o['lo'] = 200000000
 
 __o = __obj[952]  // ti.sysbios.timers.timer64.Timer/intFreqs/4
     __o['$category'] = String(java.net.URLDecoder.decode('Struct', 'UTF-8'))
     __o['$name'] = String(java.net.URLDecoder.decode('ti.sysbios.timers.timer64.Timer%2FintFreqs%2F4', 'UTF-8'))
     __o['hi'] = 0
-    __o['lo'] = 2.3333333333333334E8
+    __o['lo'] = 200000000
 
 __o = __obj[953]  // ti.sysbios.timers.timer64.Timer/intFreqs/5
     __o['$category'] = String(java.net.URLDecoder.decode('Struct', 'UTF-8'))
     __o['$name'] = String(java.net.URLDecoder.decode('ti.sysbios.timers.timer64.Timer%2FintFreqs%2F5', 'UTF-8'))
     __o['hi'] = 0
-    __o['lo'] = 2.3333333333333334E8
+    __o['lo'] = 200000000
 
 __o = __obj[954]  // ti.sysbios.timers.timer64.Timer/intFreqs/6
     __o['$category'] = String(java.net.URLDecoder.decode('Struct', 'UTF-8'))
     __o['$name'] = String(java.net.URLDecoder.decode('ti.sysbios.timers.timer64.Timer%2FintFreqs%2F6', 'UTF-8'))
     __o['hi'] = 0
-    __o['lo'] = 2.3333333333333334E8
+    __o['lo'] = 200000000
 
 __o = __obj[955]  // ti.sysbios.timers.timer64.Timer/intFreqs/7
     __o['$category'] = String(java.net.URLDecoder.decode('Struct', 'UTF-8'))
     __o['$name'] = String(java.net.URLDecoder.decode('ti.sysbios.timers.timer64.Timer%2FintFreqs%2F7', 'UTF-8'))
     __o['hi'] = 0
-    __o['lo'] = 2.3333333333333334E8
+    __o['lo'] = 200000000
 
 __o = __obj[956]  // ti.sysbios.timers.timer64.Timer/intFreqs/8
     __o['$category'] = String(java.net.URLDecoder.decode('Struct', 'UTF-8'))
     __o['$name'] = String(java.net.URLDecoder.decode('ti.sysbios.timers.timer64.Timer%2FintFreqs%2F8', 'UTF-8'))
     __o['hi'] = 0
-    __o['lo'] = 2.3333333333333334E8
+    __o['lo'] = 200000000
 
 __o = __obj[957]  // ti.sysbios.timers.timer64.Timer/intFreqs/9
     __o['$category'] = String(java.net.URLDecoder.decode('Struct', 'UTF-8'))
     __o['$name'] = String(java.net.URLDecoder.decode('ti.sysbios.timers.timer64.Timer%2FintFreqs%2F9', 'UTF-8'))
     __o['hi'] = 0
-    __o['lo'] = 2.3333333333333334E8
+    __o['lo'] = 200000000
 
 __o = __obj[958]  // ti.sysbios.timers.timer64.Timer/intFreqs/10
     __o['$category'] = String(java.net.URLDecoder.decode('Struct', 'UTF-8'))
     __o['$name'] = String(java.net.URLDecoder.decode('ti.sysbios.timers.timer64.Timer%2FintFreqs%2F10', 'UTF-8'))
     __o['hi'] = 0
-    __o['lo'] = 2.3333333333333334E8
+    __o['lo'] = 200000000
 
 __o = __obj[959]  // ti.sysbios.timers.timer64.Timer/intFreqs/11
     __o['$category'] = String(java.net.URLDecoder.decode('Struct', 'UTF-8'))
     __o['$name'] = String(java.net.URLDecoder.decode('ti.sysbios.timers.timer64.Timer%2FintFreqs%2F11', 'UTF-8'))
     __o['hi'] = 0
-    __o['lo'] = 2.3333333333333334E8
+    __o['lo'] = 200000000
 
 __o = __obj[960]  // ti.sysbios.timers.timer64.Timer/intFreqs/12
     __o['$category'] = String(java.net.URLDecoder.decode('Struct', 'UTF-8'))
     __o['$name'] = String(java.net.URLDecoder.decode('ti.sysbios.timers.timer64.Timer%2FintFreqs%2F12', 'UTF-8'))
     __o['hi'] = 0
-    __o['lo'] = 2.3333333333333334E8
+    __o['lo'] = 200000000
 
 __o = __obj[961]  // ti.sysbios.timers.timer64.Timer/intFreqs/13
     __o['$category'] = String(java.net.URLDecoder.decode('Struct', 'UTF-8'))
     __o['$name'] = String(java.net.URLDecoder.decode('ti.sysbios.timers.timer64.Timer%2FintFreqs%2F13', 'UTF-8'))
     __o['hi'] = 0
-    __o['lo'] = 2.3333333333333334E8
+    __o['lo'] = 200000000
 
 __o = __obj[962]  // ti.sysbios.timers.timer64.Timer/intFreqs/14
     __o['$category'] = String(java.net.URLDecoder.decode('Struct', 'UTF-8'))
     __o['$name'] = String(java.net.URLDecoder.decode('ti.sysbios.timers.timer64.Timer%2FintFreqs%2F14', 'UTF-8'))
     __o['hi'] = 0
-    __o['lo'] = 2.3333333333333334E8
+    __o['lo'] = 200000000
 
 __o = __obj[963]  // ti.sysbios.timers.timer64.Timer/intFreqs/15
     __o['$category'] = String(java.net.URLDecoder.decode('Struct', 'UTF-8'))
     __o['$name'] = String(java.net.URLDecoder.decode('ti.sysbios.timers.timer64.Timer%2FintFreqs%2F15', 'UTF-8'))
     __o['hi'] = 0
-    __o['lo'] = 2.3333333333333334E8
+    __o['lo'] = 200000000
 
 __o = __obj[964]  // ti.sysbios.timers.timer64.Timer/timerSettings
     __o['$category'] = String(java.net.URLDecoder.decode('Vector', 'UTF-8'))
@@ -17855,11 +17855,13 @@ __o = __obj[1013]  // ti.sysbios.knl.Idle/coreList
     __o['$category'] = String(java.net.URLDecoder.decode('Vector', 'UTF-8'))
     __o['$name'] = String(java.net.URLDecoder.decode('ti.sysbios.knl.Idle%2FcoreList', 'UTF-8'))
     __o['0'] = 0
+    __o['1'] = 0
 
 __o = __obj[1014]  // ti.sysbios.knl.Idle/funcList
     __o['$category'] = String(java.net.URLDecoder.decode('Vector', 'UTF-8'))
     __o['$name'] = String(java.net.URLDecoder.decode('ti.sysbios.knl.Idle%2FfuncList', 'UTF-8'))
-    __o['0'] = String(java.net.URLDecoder.decode('%26ti_sysbios_hal_Hwi_checkStack', 'UTF-8'))
+    __o['0'] = String(java.net.URLDecoder.decode('%26ti_sysbios_knl_Task_deleteTerminatedTasksFunc__I', 'UTF-8'))
+    __o['1'] = String(java.net.URLDecoder.decode('%26ti_sysbios_hal_Hwi_checkStack', 'UTF-8'))
 
 __o = __obj[1015]  // ti.sysbios.knl.Idle/idleFxns
     __o['$category'] = String(java.net.URLDecoder.decode('Vector', 'UTF-8'))
@@ -19166,7 +19168,7 @@ __o = __obj[1142]  // ti.sysbios.knl.Task
     __o['defaultStackHeap'] = null
     __o['defaultStackSection'] = String(java.net.URLDecoder.decode('.far%3AtaskStackSection', 'UTF-8'))
     __o['defaultStackSize'] = 2048
-    __o['deleteTerminatedTasks'] = false
+    __o['deleteTerminatedTasks'] = true
     __o['enableIdleTask'] = true
     __o['hooks'] = __obj[1201.0]
     __o['idleTaskStackSection'] = String(java.net.URLDecoder.decode('.far%3AtaskStackSection', 'UTF-8'))

@@ -13,8 +13,8 @@ static UART_Params make_params(void) {
     params.readMode = UART_MODE_BLOCKING;
     params.writeMode = UART_MODE_BLOCKING;
 
-    params.readTimeout = 1;
-    params.writeTimeout = 1;
+    params.readTimeout = 10;
+    params.writeTimeout = BIOS_WAIT_FOREVER;
 
     params.readCallback = NULL;
     params.writeCallback = NULL;
