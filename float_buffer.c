@@ -98,12 +98,18 @@ void fb_delete(FloatBuffer *const self) {
 #define MIN(X, Y) ((X) < (Y) ? (X) : (Y))
 
 static float fi8_as_fl32(const uint8_t fixed) {
-    return (float) fixed / (float) (1 << 8);
+    const float as_fl = (float) fixed / (float) (1 << 8);
+    const float offset = ((float) as_fl) - 0.5f;
+    const float scaled = offset * 2.0f;
+
+    return scaled;
 }
 
 size_t fb_append(FloatBuffer *const self, Buffer *const buffer) {
+#ifdef USE_SEMAPHORES
     Semaphore_pend(self->semaphore, BIOS_WAIT_FOREVER);
     Semaphore_pend(buffer->semaphore, BIOS_WAIT_FOREVER);
+#endif
 
     const size_t num_to_append =
         MIN(buffer->size, FLOAT_BUFFER_SIZE - self->size);
@@ -116,24 +122,32 @@ size_t fb_append(FloatBuffer *const self, Buffer *const buffer) {
     memmove(buffer->data, buffer->data + num_to_append, unappended);
     buffer->size -= num_to_append;
 
-    Semaphore_post(buffer->semaphore);
+#ifdef USE_SEMAPHORES
     Semaphore_post(self->semaphore);
+    Semaphore_post(buffer->semaphore);
+#endif
 
     return num_to_append;
 }
 
 size_t fb_size(const FloatBuffer *const self) {
+#ifdef USE_SEMAPHORES
     Semaphore_pend(self->semaphore, BIOS_WAIT_FOREVER);
+#endif
 
     const size_t size = self->size;
 
+#ifdef USE_SEMAPHORES
     Semaphore_post(self->semaphore);
+#endif
 
     return size;
 }
 
 void fb_fft_drain(FloatBuffer *const self, float complex *const output) {
+#ifdef USE_SEMAPHORES
     Semaphore_pend(self->semaphore, BIOS_WAIT_FOREVER);
+#endif
 
     float *const x = (float*) self->data;
     float *const w = (float*) self->twiddle_factors;
@@ -145,7 +159,9 @@ void fb_fft_drain(FloatBuffer *const self, float complex *const output) {
 
     self->size = 0;
 
+#ifdef USE_SEMAPHORES
     Semaphore_post(self->semaphore);
+#endif
 }
 
 #undef MIN

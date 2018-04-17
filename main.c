@@ -25,6 +25,10 @@
 #include <xdc/runtime/System.h>
 #include <xdc/std.h>
 
+UartSynchronizer *sync;
+Event_Handle read_event;
+Buffer *read_buffer;
+
 // Event IDs:
 // 0: write UART write buffer
 // 1: append UART read buffer onto FFT buffer
@@ -43,25 +47,22 @@ Void test_print_task(const UArg sync_arg,
 static void initialize(void) {
     Error_Block error = make_error_block();
 
-    Buffer *const read_buffer = bf_new(&error);
+    read_buffer = bf_new(&error);
     Buffer *const write_buffer = bf_new(&error);
     FloatBuffer *const fft_buffer = fb_new(&error);
     float complex *const cmag_buffer =
-        Memory_alloc(NULL, 1024 * sizeof(float complex), 8, &error);
+        Memory_alloc(NULL, FLOAT_BUFFER_SIZE * sizeof(float complex),
+                     8, &error);
 
     if (!cmag_buffer) {
         System_abort("initialize: unable to allocate float complex buffer\n");
     }
 
-    Event_Handle read_event = event_new(&error);
+    read_event = event_new(&error);
     Event_Handle write_event = event_new(&error);
     Event_Handle fft_event = event_new(&error);
 
-    UartSynchronizer *const sync = us_new(&error);
-
-    UartReadArgs read_args = { read_event, sync };
-    Task_Handle read_task = task_new(&uart_read_task, &read_args,
-                                     read_buffer, 1, &error);
+    sync = us_new(&error);
 
     UartWriteArgs write_args = { write_event, sync };
     Task_Handle write_task = task_new(&uart_write_task, &write_args,
@@ -83,14 +84,13 @@ static void initialize(void) {
     BIOS_start();
 
     Task_delete(&write_task);
-    Task_delete(&read_task);
 
     us_delete(sync);
 
     Event_delete(&write_event);
     Event_delete(&read_event);
 
-    Memory_free(NULL, cmag_buffer, 1024 * sizeof(float complex));
+    Memory_free(NULL, cmag_buffer, FLOAT_BUFFER_SIZE * sizeof(float complex));
     fb_delete(fft_buffer);
     bf_delete(write_buffer);
     bf_delete(read_buffer);

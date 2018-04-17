@@ -24,7 +24,7 @@ calc_fft(const Event_Handle event, const Event_Handle fft_event,
 
         fb_append(fft_buffer, input_buffer);
 
-        if (fb_size(fft_buffer) >= 1024) {
+        if (fb_size(fft_buffer) >= FLOAT_BUFFER_SIZE) {
             Event_post(fft_event, Event_Id_02);
         }
     }
@@ -35,8 +35,8 @@ static void calculate_magnitudes(float *const complex_mag) {
         const float re = complex_mag[2 * i];
         const float im = complex_mag[2 * i + 1];
 
-        complex_mag[i] = sqrtsp(sqrtsp(re * re + im * im)
-                                * 2.0f / FLOAT_BUFFER_SIZE);
+        complex_mag[i] = sqrtsp((re * re + im * im))
+                         * 2.0f / (float) FLOAT_BUFFER_SIZE;
     }
 }
 
@@ -44,15 +44,16 @@ static void calculate_spectral_density(const float *const magnitude,
                                        uint8_t *const magnitudes) {
     // these are offset to be double word aligned
     static const size_t INDEX[11][2] =
-        { { 0, 2 }, { 0, 3 }, { 2, 2 }, { 4, 3 }, { 8, 5 },
-          { 18, 6 }, { 36, 11 }, { 54, 15 }, { 72, 20 }, { 110, 27 },
-          { 146, 36 } };
+        { { 2, 2 }, { 4, 2 }, { 6, 4 }, { 10, 4 }, { 14, 8 },
+          { 22, 8 }, { 30, 16 }, { 46, 16 }, { 62, 32 }, { 94, 32 },
+          { 126, 64 } };
 
     for (size_t i = 0; i < 11; ++i) {
-        float mag = DSPF_sp_vecsum_sq(magnitude + INDEX[i][0],
-                                      (int) INDEX[i][1]);
+        float mag = 0.0f;
 
-        mag /= (float) FLOAT_BUFFER_SIZE;
+        for (size_t j = INDEX[i][0]; j < INDEX[i][0] + INDEX[i][1]; ++j) {
+            mag += magnitude[j];
+        }
 
         if (mag > 1.0f) {
             mag = 1.0f;

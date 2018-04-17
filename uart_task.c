@@ -6,19 +6,22 @@
 
 #include <ti/sysbios/BIOS.h>
 
-static void uart_read(const Event_Handle event, UartSynchronizer *const sync,
-                      Buffer *const buffer) {
+extern UartSynchronizer *sync;
+extern Event_Handle read_event;
+extern Buffer *read_buffer;
+
+static void uart_read(void) {
     uint8_t local_buffer[512];
 
     while (true) {
         const size_t read = us_read(sync, local_buffer, 512);
 
         if (read > 0) {
-            bf_append(buffer, local_buffer, read);
+            bf_append(read_buffer, local_buffer, read);
         }
 
-        if (bf_size(buffer) >= 256) {
-            Event_post(event, Event_Id_01);
+        if (bf_size(read_buffer) >= 256) {
+            Event_post(read_event, Event_Id_01);
         }
     }
 }
@@ -50,13 +53,8 @@ static void uart_write(const Event_Handle event, UartSynchronizer *const sync,
     }
 }
 
-Void uart_read_task(const UArg args_arg, const UArg buffer_arg) {
-    UartReadArgs *const args = (UartReadArgs*) args_arg;
-    const Event_Handle event = args->event;
-    UartSynchronizer *const sync = args->sync;
-    Buffer *const buffer = (Buffer*) buffer_arg;
-
-    uart_read(event, sync, buffer);
+Void uart_read_task(void) {
+    uart_read();
 }
 
 Void uart_write_task(const UArg args_arg, const UArg buffer_arg) {

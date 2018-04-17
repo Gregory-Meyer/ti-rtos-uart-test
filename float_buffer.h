@@ -9,7 +9,7 @@
 #include <ti/sysbios/knl/Semaphore.h>
 #include <xdc/runtime/Error.h>
 
-#define FLOAT_BUFFER_SIZE 1024
+#define FLOAT_BUFFER_SIZE 4096
 
 typedef struct FloatBuffer {
     float complex data[FLOAT_BUFFER_SIZE];

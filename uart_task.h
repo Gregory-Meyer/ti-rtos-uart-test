@@ -16,7 +16,7 @@ typedef struct UartWriteArgs {
     UartSynchronizer *sync;
 } UartWriteArgs;
 
-Void uart_read_task(UArg args_arg, UArg buffer_arg);
+Void uart_read_task(void);
 
 Void uart_write_task(UArg args_arg, UArg buffer_arg);
 

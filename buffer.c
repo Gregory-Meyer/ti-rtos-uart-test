@@ -34,31 +34,41 @@ void bf_delete(Buffer *const self) {
 
 size_t bf_append(Buffer *const self, const void *const buffer,
                const size_t length) {
+#ifdef USE_SEMAPHORES
     Semaphore_pend(self->semaphore, BIOS_WAIT_FOREVER);
+#endif
 
     const size_t num_to_append = MIN(length, BUFFER_SIZE - self->size);
 
     memcpy(self->data + self->size, buffer, num_to_append);
     self->size += num_to_append;
 
+#ifdef USE_SEMAPHORES
     Semaphore_post(self->semaphore);
+#endif
 
     return num_to_append;
 }
 
 size_t bf_size(const Buffer *const self) {
+#ifdef USE_SEMAPHORES
     Semaphore_pend(self->semaphore, BIOS_WAIT_FOREVER);
+#endif
 
     const size_t size = self->size;
 
+#ifdef USE_SEMAPHORES
     Semaphore_post(self->semaphore);
+#endif
 
     return size;
 }
 
 size_t bf_move(Buffer *const self, void *const buffer,
                const size_t length) {
+#ifdef USE_SEMAPHORES
     Semaphore_pend(self->semaphore, BIOS_WAIT_FOREVER);
+#endif
 
     const size_t num_to_move = MIN(length, self->size);
     const size_t remaining = self->size - num_to_move;
@@ -68,7 +78,9 @@ size_t bf_move(Buffer *const self, void *const buffer,
     memmove(self->data, self->data + num_to_move, remaining);
     self->size = remaining;
 
+#ifdef USE_SEMAPHORES
     Semaphore_post(self->semaphore);
+#endif
 
     return num_to_move;
 }

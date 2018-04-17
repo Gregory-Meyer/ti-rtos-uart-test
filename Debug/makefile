@@ -145,7 +145,7 @@ all: $(OBJS) $(GEN_CMDS)
 ti-rtos-uart-test.out: $(OBJS) $(GEN_CMDS)
 	@echo 'Building target: "$@"'
 	@echo 'Invoking: C6000 Linker'
-	"/home/greg/ti/ti-cgt-c6000_8.2.2/bin/cl6x" -g --c99 --relaxed_ansi --diag_warning=225 --diag_wrap=off --display_error_number -z -m"ti-rtos-uart-test.map" -i"/home/greg/ti/ti-cgt-c6000_8.2.2/lib" -i"/home/greg/ti/ti-cgt-c6000_8.2.2/include" -i"/home/greg/ti/mathlib_c66x_3_1_2_1/packages/ti/mathlib/lib" -i"/home/greg/ti/dsplib_c66x_3_4_0_0/packages/ti/dsplib/lib" --reread_libs --diag_wrap=off --display_error_number --warn_sections --xml_link_info="ti-rtos-uart-test_linkInfo.xml" --rom_model -o "ti-rtos-uart-test.out" $(ORDERED_OBJS)
+	"/home/greg/ti/ti-cgt-c6000_8.2.2/bin/cl6x" --define=USE_SEMAPHORES -g --c99 --relaxed_ansi --diag_warning=225 --diag_wrap=off --display_error_number -z -m"ti-rtos-uart-test.map" -i"/home/greg/ti/ti-cgt-c6000_8.2.2/lib" -i"/home/greg/ti/ti-cgt-c6000_8.2.2/include" -i"/home/greg/ti/mathlib_c66x_3_1_2_1/packages/ti/mathlib/lib" -i"/home/greg/ti/dsplib_c66x_3_4_0_0/packages/ti/dsplib/lib" --reread_libs --diag_wrap=off --display_error_number --warn_sections --xml_link_info="ti-rtos-uart-test_linkInfo.xml" --rom_model -o "ti-rtos-uart-test.out" $(ORDERED_OBJS)
 	@echo 'Finished building target: "$@"'
 	@echo ' '
 

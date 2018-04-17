@@ -13,7 +13,7 @@ static UART_Params make_params(void) {
     params.readMode = UART_MODE_BLOCKING;
     params.writeMode = UART_MODE_BLOCKING;
 
-    params.readTimeout = 10;
+    params.readTimeout = 0;
     params.writeTimeout = BIOS_WAIT_FOREVER;
 
     params.readCallback = NULL;
@@ -26,7 +26,7 @@ static UART_Params make_params(void) {
 
     params.readEcho = UART_ECHO_OFF;
 
-    params.baudRate = 115200;
+    params.baudRate = 921600;
 
     params.dataLength = UART_LEN_8;
     params.stopBits = UART_STOP_ONE;
@@ -74,24 +74,30 @@ void us_delete(UartSynchronizer *const self) {
 
 size_t us_read(UartSynchronizer *self, void *const buffer,
                const size_t length) {
+#ifdef USE_SEMAPHORES
     Semaphore_pend(self->semaphore, BIOS_WAIT_FOREVER);
+#endif
 
     const size_t num_read = UART_read(self->uart, buffer, length);
 
-    Semaphore_post(self->semaphore);
-
+#ifdef USE_SEMAPHORES
+     Semaphore_post(self->semaphore);
+#endif
 
     return num_read;
 }
 
 size_t us_write(UartSynchronizer *self, const void *const buffer,
                 const size_t length) {
+#ifdef USE_SEMAPHORES
     Semaphore_pend(self->semaphore, BIOS_WAIT_FOREVER);
+#endif
 
     const size_t num_wrote = UART_write(self->uart, buffer, length);
 
+#ifdef USE_SEMAPHORES
     Semaphore_post(self->semaphore);
-
+#endif
 
     return num_wrote;
 }

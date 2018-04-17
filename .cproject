@@ -55,6 +55,7 @@
 									<listOptionValue builtIn="false" value="${TI_MAS_DSPLIB_C66X_SYMBOLS}"/>
 									<listOptionValue builtIn="false" value="${TI_PDK_SYMBOLS}"/>
 									<listOptionValue builtIn="false" value="${BIOS_SYMBOLS}"/>
+									<listOptionValue builtIn="false" value="USE_SEMAPHORES"/>
 								</option>
 								<option id="com.ti.ccstudio.buildDefinitions.C6000_8.2.compilerID.C_DIALECT.517833298" name="C Dialect" superClass="com.ti.ccstudio.buildDefinitions.C6000_8.2.compilerID.C_DIALECT" value="com.ti.ccstudio.buildDefinitions.C6000_8.2.compilerID.C_DIALECT.C99" valueType="enumerated"/>
 								<option id="com.ti.ccstudio.buildDefinitions.C6000_8.2.compilerID.LANGUAGE_MODE.1948054994" name="Language mode" superClass="com.ti.ccstudio.buildDefinitions.C6000_8.2.compilerID.LANGUAGE_MODE" value="com.ti.ccstudio.buildDefinitions.C6000_8.2.compilerID.LANGUAGE_MODE.RELAXED_ANSI" valueType="enumerated"/>
